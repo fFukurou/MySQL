@@ -56,6 +56,18 @@ SELECT title FROM BOOKS WHERE TITLE LIKE '%stories%';
 
 SELECT title, pages FROM BOOKS ORDER BY PAGES DESC LIMIT 1;  
 
+SELECT CONCAT(title, ' - ', released_year) AS 'summary' FROM BOOKS ORDER BY released_year DESC LIMIT 3;
+
+SELECT title, author_lname FROM BOOKS WHERE author_lname LIKE '% %'; -- PRINT BOOKS WHERE AUTHOR LAST NAME HAS A SPACE
+
+-- UPDATE BOOKS SET stock_quantity=1 WHERE author_lname='Fukurou';
+
+SELECT title, released_year, stock_quantity FROM BOOKS ORDER BY stock_quantity LIMIT 3;
+
+SELECT title, author_lname FROM BOOKS ORDER BY author_lname, title; 
+
+SELECT UPPER(CONCAT('My favorite author is ', author_fname, ' ', author_lname, '!')) 
+AS yell FROM BOOKS ORDER BY author_lname;
 
 
 
