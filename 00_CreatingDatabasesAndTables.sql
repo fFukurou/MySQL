@@ -11,6 +11,8 @@ CREATE TABLE cats
     age INT
 );
 
+INSERT INTO CU VALUES(ROLA);
+
 DROP TABLE dogs;
 CREATE TABLE dogs (
 	name VARCHAR(50),
