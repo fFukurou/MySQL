@@ -18,4 +18,114 @@ SELECT 80 > 40; -- TRUE
 SELECT 80 > 100; -- FALSE
 SELECT 1 > NULL;
 
--- -------------------------------- GREATER THAN -------------------------------- 
+-- -------------------------------- LOGICAL AND -------------------------------- 
+
+SELECT * FROM BOOKS WHERE AUTHOR_LNAME='Eggers' AND released_year > 2010 AND TITLE LIKE '%novel%';
+SELECT * FROM BOOKS WHERE CHAR_LENGTH(TITLE) > 30 AND PAGES > 400;
+
+-- -------------------------------- LOGICAL OR -------------------------------- 
+
+SELECT * FROM BOOKS WHERE AUTHOR_LNAME='Eggers' OR released_year > 2010;
+SELECT TITLE, PAGES FROM BOOKS WHERE PAGES < 200 OR TITLE LIKE '%stories%';
+
+-- -------------------------------- BETWEEN -------------------------------- 
+
+SELECT TITLE, RELEASED_YEAR FROM BOOKS WHERE RELEASED_YEAR >= 2004 AND RELEASED_YEAR <= 2015 ORDER BY RELEASED_YEAR;
+SELECT TITLE, RELEASED_YEAR FROM BOOKS WHERE RELEASED_YEAR BETWEEN 2004 AND 2015 ORDER BY RELEASED_YEAR;
+SELECT TITLE, PAGES FROM BOOKS WHERE PAGES BETWEEN 200 AND 400 ORDER BY PAGES;
+
+SELECT TITLE, PAGES FROM BOOKS WHERE PAGES NOT BETWEEN 200 AND 400 ORDER BY PAGES;
+
+-- -------------------------------- COMPARING DATES -------------------------------- 
+
+USE test_db;
+SELECT * FROM TEST1 WHERE BIRTHDAY < '2010-05-10';
+SELECT * FROM TEST1 WHERE YEAR(BIRTHDAY) < 2010;
+SELECT * FROM TEST1 WHERE HOUR(EVENTS) > 18;
+
+-- -------------------------------- CAST -------------------------------- 
+
+SELECT CAST('9:00:00' AS TIME);
+SELECT * FROM TEST1 WHERE events BETWEEN CAST('12:31:30' AS TIME) AND CAST('22:00:00' AS TIME);
+-- MORE EFFICIENT WAY
+SELECT * FROM TEST1 WHERE HOUR(DURATION) BETWEEN 12 AND 21;
+
+-- -------------------------------- IN OPERATOR -------------------------------- 
+
+USE book_shop;
+SELECT * FROM BOOKS WHERE AUTHOR_LNAME IN ('Carver', 'Lahiri', 'Smith');
+SELECT * FROM BOOKS WHERE AUTHOR_LNAME NOT IN ('Carver', 'Lahiri', 'Smith');
+
+SELECT TITLE, RELEASED_YEAR FROM BOOKS WHERE RELEASED_YEAR % 2 != 0 AND RELEASED_YEAR > 2000;
+
+-- -------------------------------- CASE -------------------------------- 
+
+SELECT TITLE, RELEASED_YEAR,
+CASE
+	WHEN released_year >= 2000 THEN 'modern lit'
+    ELSE '20th century lit'
+END AS genre
+FROM BOOKS;
+
+SELECT TITLE, STOCK_QUANTITY,
+CASE
+	WHEN stock_quantity BETWEEN 0 AND 50 THEN '*'
+	WHEN stock_quantity BETWEEN 51 AND 100 THEN '**'
+	WHEN stock_quantity BETWEEN 101 AND 150 THEN '***'
+    ELSE '****'
+END AS STOCK_VIEW
+FROM BOOKS ORDER BY STOCK_VIEW;
+
+SELECT TITLE, STOCK_QUANTITY,
+CASE
+	WHEN stock_quantity <= 50 THEN '*'
+	WHEN stock_quantity <= 100 THEN '**'
+	WHEN stock_quantity <= 150 THEN '**'
+    ELSE '****'
+END AS STOCK_VIEW
+FROM BOOKS ORDER BY STOCK_VIEW;
+
+-- -------------------------------- IS NULL -------------------------------- 
+
+SELECT * FROM BOOKS WHERE AUTHOR_LNAME IS NULL;
+DELETE FROM BOOKS WHERE TITLE IS NULL;
+
+-- -------------------------------- EXERCISES -------------------------------- 
+
+SELECT 10 != 10; -- FALSE
+SELECT 15 > 14 AND 99 - 5 <= 94; -- TRUE
+SELECT 1 IN (5,3); -- FALSE
+SELECT 9 BETWEEN 8 AND 10; -- TRUE
+
+-- SELECTS ALL BOOKS WRITTEN BEFORE 1980
+SELECT * FROM BOOKS WHERE RELEASED_YEAR < 1980;
+
+-- SELECT ALL BOOKS WRITTEN BY EGGERS OR CHABON (LAST NAME)
+SELECT * FROM BOOKS WHERE AUTHOR_LNAME = 'Eggers' OR AUTHOR_LNAME = 'Chabon';
+
+-- SELECT ALL BOOKS WRITTEN BY LAHIRI PUBLISHED AFTER 2000
+SELECT * FROM BOOKS WHERE AUTHOR_LNAME = 'Lahiri' AND RELEASED_YEAR > 2000;
+
+-- BOOKS WITH PAGE COUNT BETWEEN 100 AND 200
+SELECT * FROM BOOKS WHERE PAGES BETWEEN 100 AND 200;
+
+-- SELECT ALL BOOKS WHERE AUTHOR_LNAME STARTS WITH A 'C' OR AN 'S'
+SELECT * FROM BOOKS WHERE AUTHOR_LNAME LIKE 'C%' OR AUTHOR_LNAME LIKE 'S%';
+
+SELECT title, author_lname,
+CASE
+	WHEN title LIKE '%stories%' THEN 'Short Stories'
+    WHEN title = 'Just Kids' OR title LIKE '%A Heartbreaking Work%' THEN 'Memoir'
+    ELSE 'Novel'
+END AS TYPE
+FROM BOOKS;
+
+-- BONUS HARD ONE
+SELECT author_fname, author_lname, CONCAT(COUNT(*), ' ', 
+	CASE
+		WHEN COUNT(*) > 1 THEN 'books'
+	ELSE 'book'
+END) AS COUNT
+FROM BOOKS WHERE AUTHOR_LNAME IS NOT NULL GROUP BY author_fname, author_lname;
+
+
