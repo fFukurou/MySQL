@@ -26,4 +26,4 @@ ROUND(SUM(CASE
 	WHEN rating < 3 THEN 1 ELSE 0
 END) / count(*) * 100, 2) AS poor_query_percentage
 FROM QUERIES
-GROUP BY query_name; 
+GROUP BY query_name HAVING query_name IS NOT NULL; 
