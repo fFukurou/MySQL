@@ -62,3 +62,32 @@
 -- limit 1;
 
 -- 16
+-- select round(min(lat_n),4) from station where lat_n > 38.7780;
+
+-- 17
+-- select round(long_w,4) from station where lat_n > 38.7780 order by lat_n asc limit 1;
+
+-- 18
+-- select round(abs((min(lat_n) - max(lat_n))) + (abs(min(long_w) - max(long_w))), 4) from station;
+
+-- 19
+-- SELECT 
+-- ROUND(SQRT(POW(min(lat_n) - max(lat_n), 2) + 
+--           POW(min(long_w) - max(long_w), 2))
+-- , 4)
+-- from station;
+
+-- 20 
+-- WITH ordered_station AS (
+--     SELECT
+--         lat_n,
+--         ROW_NUMBER() OVER (ORDER BY lat_n) AS row_num,
+--         COUNT(*) OVER () AS total_rows
+--     FROM station
+-- )
+-- SELECT ROUND(AVG(lat_n), 4)
+-- FROM ordered_station
+-- WHERE row_num in (
+--     FLOOR(((total_rows + 1) / 2)),
+--     (total_rows + 2) / 2
+-- );
